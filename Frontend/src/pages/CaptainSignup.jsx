@@ -3,24 +3,32 @@ import { useState } from "react";
 
 const CaptainSignup = () => {
   const [captainFormData, setCaptainFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: { firstName: "", lastName: "" },
     email: "",
     password: "",
   });
 
   const onChangeHandler = (identifier, event) => {
-    setCaptainFormData((prev) => {
-      return { ...prev, [identifier]: event.target.value };
-    });
+    const { name, value } = event.target;
+
+    if (identifier === "fullName") {
+      setCaptainFormData((prev) => ({
+        ...prev,
+        fullName: { ...prev.fullName, [name]: value },
+      }));
+    } else {
+      setCaptainFormData((prev) => ({
+        ...prev,
+        [identifier]: value,
+      }));
+    }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(captainFormData);
     setCaptainFormData({
-      firstName: "",
-      lastName: "",
+      fullName: { firstName: "", lastName: "" },
       email: "",
       password: "",
     });
@@ -42,19 +50,21 @@ const CaptainSignup = () => {
               className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg placeholder:text-base"
               required
               type="text"
+              name="firstName"
               placeholder="First name"
-              value={captainFormData.firstName}
+              value={captainFormData.fullName.firstName}
               onChange={(event) => {
-                onChangeHandler("firstName", event);
+                onChangeHandler("fullName", event);
               }}
             />
             <input
               className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg placeholder:text-base"
               type="text"
               placeholder="Last name"
-              value={captainFormData.lastName}
+              name="lastName"
+              value={captainFormData.fullName.lastName}
               onChange={(event) => {
-                onChangeHandler("lastName", event);
+                onChangeHandler("fullName", event);
               }}
             />
           </div>

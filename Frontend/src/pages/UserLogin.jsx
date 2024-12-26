@@ -1,8 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { userActions } from "../redux/slices/user-slice";
 
 const UserLogin = () => {
   const [userFormData, setUserFormData] = useState({ email: "", password: "" });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onChangeHandler = (identifier, event) => {
     setUserFormData((prev) => {
@@ -10,9 +15,18 @@ const UserLogin = () => {
     });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(userFormData);
+    const userData = userFormData;
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData);
+
+    if (response.status === 200) {
+      const data = response.data;
+      dispatch(userActions.userSignup(data.user));
+      localStorage.setItem("token", data.token);
+      navigate("/home");
+    }
+
     setUserFormData({ email: "", password: "" });
   };
 
@@ -24,10 +38,8 @@ const UserLogin = () => {
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
           alt=""
         />
-        <form>
-          <h3 className="text-lg font-medium mb-2">
-            {`${"What's"}`} your email
-          </h3>
+        <form onSubmit={submitHandler}>
+          <h3 className="text-lg font-medium mb-2">{`${"What's"}`} your email</h3>
           <input
             className="bg-[#eeeeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base"
             required
@@ -49,10 +61,7 @@ const UserLogin = () => {
               onChangeHandler("password", event);
             }}
           />
-          <button
-            onClick={submitHandler}
-            className="bg-[#111] text-[#fff] font-semibold mb-3 rounded px-4 py-2 w-full text-lg placeholder:text-base"
-          >
+          <button className="bg-[#111] text-[#fff] font-semibold mb-3 rounded px-4 py-2 w-full text-lg placeholder:text-base">
             Login
           </button>
         </form>

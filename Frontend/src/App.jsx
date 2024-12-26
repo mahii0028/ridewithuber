@@ -7,6 +7,7 @@ import CaptainLogin from "./pages/CaptainLogin";
 import CaptainSignup from "./pages/CaptainSignup";
 import UserWrapper from "./pages/UserWrapper";
 import UserLogout from "./pages/UserLogout";
+import CaptainHome from "./pages/CaptainHome";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           </UserWrapper>
         }
       />
+      <Route path="/captain-home" element={<CaptainHome />} />
     </Routes>
   );
 };

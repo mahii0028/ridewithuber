@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CaptainLogin = () => {
   const [captainFormData, setCaptainFormData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const onChangeHandler = (identifier, event) => {
     setCaptainFormData((prev) => {
@@ -13,9 +16,21 @@ const CaptainLogin = () => {
     });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(captainFormData);
+    const newCaptain = captainFormData;
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/login`,
+      newCaptain
+    );
+
+    if (response.status === 200) {
+      const data = response.data;
+      localStorage.setItem("token", data.token);
+      navigate("/captain-login");
+    }
+
     setCaptainFormData({ email: "", password: "" });
   };
   return (
@@ -27,9 +42,7 @@ const CaptainLogin = () => {
           alt=""
         />
         <form>
-          <h3 className="text-lg font-medium mb-2">
-            {`${"What's"}`} your email
-          </h3>
+          <h3 className="text-lg font-medium mb-2">{`${"What's"}`} your email</h3>
           <input
             className="bg-[#eeeeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base"
             required

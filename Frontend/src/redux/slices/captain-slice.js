@@ -1,4 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const fetchCaptainProfile = createAsyncThunk("captainProfile", async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
+});
 
 const captainInitialState = {
   captain: [
@@ -6,8 +17,6 @@ const captainInitialState = {
       fullName: { firstName: "", lastName: "" },
       email: "",
       password: "",
-      isLoading: false,
-      error: null,
       vehicle: {
         color: "",
         plate: "",
@@ -16,6 +25,9 @@ const captainInitialState = {
       },
     },
   ],
+  isLoading: false,
+  isError: false,
+  error: null,
 };
 
 const captainSlice = createSlice({
@@ -25,6 +37,20 @@ const captainSlice = createSlice({
     captainSignup: (state, action) => {
       state.captain = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCaptainProfile.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchCaptainProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.captain = action.payload;
+    });
+    builder.addCase(fetchCaptainProfile.rejected, (state, action) => {
+      state.isError = true;
+      state.error = action.payload;
+      console.log(action.payload);
+    });
   },
 });
 

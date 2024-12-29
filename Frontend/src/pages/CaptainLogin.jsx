@@ -28,7 +28,7 @@ const CaptainLogin = () => {
     if (response.status === 200) {
       const data = response.data;
       localStorage.setItem("token", data.token);
-      navigate("/captain-login");
+      navigate("/captain-home");
     }
 
     setCaptainFormData({ email: "", password: "" });

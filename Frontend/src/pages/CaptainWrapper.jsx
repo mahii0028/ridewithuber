@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCaptainProfile } from "../redux/slices/captain-slice";
+import PropTypes from "prop-types";
+
+const propTypes = {
+  children: PropTypes.node,
+};
 
 const CaptainWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -28,5 +33,5 @@ const CaptainWrapper = ({ children }) => {
 
   return <>{children}</>;
 };
-
+CaptainWrapper.propTypes = propTypes;
 export default CaptainWrapper;

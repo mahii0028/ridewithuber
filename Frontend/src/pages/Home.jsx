@@ -3,13 +3,16 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
 import LocationsSearchPanel from "../components/LocationsSearchPanel";
+import VehiclePanel from "../components/VehiclePanel";
 
 const Home = () => {
   const [pickUp, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [openPanel, setOpenPanel] = useState(false);
+  const [openVehiclePanel, setOpenVehiclePanel] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -26,13 +29,26 @@ const Home = () => {
       });
     } else {
       gsap.to(panelRef.current, {
-        height: "0",
+        height: "0%",
+        padding: "0",
       });
       gsap.to(panelCloseRef.current, {
         opacity: 0,
       });
     }
   }, [openPanel]);
+
+  useGSAP(() => {
+    if (openVehiclePanel) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [openVehiclePanel]);
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -43,9 +59,9 @@ const Home = () => {
       />
       <div className="h-screen w-screen">
         {/* image for temporary use  */}
-        {/* <LiveTracking /> */}
+        <img src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
       </div>
-      <div className=" flex flex-col justify-end h-screen absolute top-0 w-full">
+      <div className=" flex flex-col justify-end h-screen absolute bottom-0 w-full">
         <div className="h-[30%] p-6 bg-white relative">
           <h5
             ref={panelCloseRef}
@@ -87,18 +103,34 @@ const Home = () => {
               placeholder="Enter your destination"
             />
           </form>
+        </div>
+        <div ref={panelRef} className="bg-white h-[0%]">
           <button className="bg-black text-white px-4 py-2 rounded-lg mt-3 w-full">
             Find Trip
           </button>
-        </div>
-        <div ref={panelRef} className="bg-white h-0">
-          <LocationsSearchPanel />
+          <LocationsSearchPanel
+            setOpenVehiclePanel={setOpenVehiclePanel}
+            setOpenPanel={setOpenPanel}
+          />
         </div>
       </div>
-      <div className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"></div>
-      <div className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"></div>
-      <div className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"></div>
-      <div className="fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12"></div>
+      <div
+        className="flex flex-col justify-end absolute bottom-0 w-full bg-white px-2 translate-y-[100%]"
+        ref={vehiclePanelRef}
+      >
+        <div className="mb-2">
+          <span
+            onClick={() => {
+              setOpenVehiclePanel(false);
+            }}
+            className="text-center flex justify-center"
+          >
+            <i className="ri-arrow-down-wide-line text-3xl opacity-15"></i>
+          </span>
+          <h3 className="text-lg font-medium">Choose a Vehicle</h3>
+        </div>
+        <VehiclePanel />
+      </div>
     </div>
   );
 };

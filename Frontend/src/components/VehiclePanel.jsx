@@ -1,6 +1,12 @@
 import { Fragment } from "react";
+import PropTypes from "prop-types";
 
-const VehiclePanel = () => {
+const propTypes = {
+  setConfirmRide: PropTypes.bool.isRequired,
+  setOpenVehiclePanel: PropTypes.bool.isRequired,
+};
+
+const VehiclePanel = ({ setConfirmRide, setOpenVehiclePanel }) => {
   const VEHICLE_DETAILS = [
     {
       id: "1",
@@ -37,6 +43,10 @@ const VehiclePanel = () => {
     <Fragment>
       {VEHICLE_DETAILS.map((details) => (
         <div
+          onClick={() => {
+            setConfirmRide(true);
+            setOpenVehiclePanel(false);
+          }}
           key={details.id}
           className="flex items-center justify-between px-2 py-2 h-24  border-2 rounded-md mb-2"
         >
@@ -55,7 +65,7 @@ const VehiclePanel = () => {
             <p className="text-sm">{details.para}</p>
           </div>
           <div>
-            <span className="font-medium">${details.price}</span>
+            <span className="font-medium">&#8377;{details.price}</span>
           </div>
         </div>
       ))}
@@ -63,4 +73,5 @@ const VehiclePanel = () => {
   );
 };
 
+VehiclePanel.propTypes = propTypes;
 export default VehiclePanel;

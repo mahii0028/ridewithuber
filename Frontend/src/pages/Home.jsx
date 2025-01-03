@@ -4,15 +4,18 @@ import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
 import LocationsSearchPanel from "../components/LocationsSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
 
 const Home = () => {
   const [pickUp, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [openPanel, setOpenPanel] = useState(false);
   const [openVehiclePanel, setOpenVehiclePanel] = useState(false);
+  const [openConfirmRide, setConfirmRide] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
   const vehiclePanelRef = useRef(null);
+  const confirmRideRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -49,6 +52,18 @@ const Home = () => {
       });
     }
   }, [openVehiclePanel]);
+
+  useGSAP(() => {
+    if (openConfirmRide) {
+      gsap.to(confirmRideRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(confirmRideRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [openConfirmRide]);
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -129,8 +144,16 @@ const Home = () => {
           </span>
           <h3 className="text-lg font-medium">Choose a Vehicle</h3>
         </div>
-        <VehiclePanel />
+        <VehiclePanel setConfirmRide={setConfirmRide} setOpenVehiclePanel={setOpenVehiclePanel} />
       </div>
+      {openConfirmRide && (
+        <div
+          className="flex flex-col justify-end  absolute bottom-0 w-full bg-white px-2 translate-y-[100%]"
+          ref={confirmRideRef}
+        >
+          <ConfirmRide setConfirmRide={setConfirmRide} />
+        </div>
+      )}
     </div>
   );
 };

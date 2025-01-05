@@ -5,6 +5,8 @@ import "remixicon/fonts/remixicon.css";
 import LocationsSearchPanel from "../components/LocationsSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
+import LookingForDriver from "../components/LookingForDriver";
+import WaitingForDriver from "../components/WaitingForDriver";
 
 const Home = () => {
   const [pickUp, setPickup] = useState("");
@@ -12,10 +14,14 @@ const Home = () => {
   const [openPanel, setOpenPanel] = useState(false);
   const [openVehiclePanel, setOpenVehiclePanel] = useState(false);
   const [openConfirmRide, setConfirmRide] = useState(false);
+  const [vehicleFound, setVehicleFound] = useState(false);
+  const [waitingForDriver, setWaitingForDriver] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
   const vehiclePanelRef = useRef(null);
   const confirmRideRef = useRef(null);
+  const vehicleFoundRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -64,6 +70,30 @@ const Home = () => {
       });
     }
   }, [openConfirmRide]);
+
+  useGSAP(() => {
+    if (vehicleFound) {
+      gsap.to(vehicleFoundRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(vehicleFoundRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [vehicleFound]);
+
+  useGSAP(() => {
+    if (waitingForDriver) {
+      gsap.to(waitingForDriverRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(waitingForDriverRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [waitingForDriver]);
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -146,14 +176,25 @@ const Home = () => {
         </div>
         <VehiclePanel setConfirmRide={setConfirmRide} setOpenVehiclePanel={setOpenVehiclePanel} />
       </div>
-      {openConfirmRide && (
-        <div
-          className="flex flex-col justify-end  absolute bottom-0 w-full bg-white px-2 translate-y-[100%]"
-          ref={confirmRideRef}
-        >
-          <ConfirmRide setConfirmRide={setConfirmRide} />
-        </div>
-      )}
+
+      <div
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
+        ref={confirmRideRef}
+      >
+        <ConfirmRide setConfirmRide={setConfirmRide} setVehicleFound={setVehicleFound} />
+      </div>
+      <div
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
+        ref={vehicleFoundRef}
+      >
+        <LookingForDriver setVehicleFound={setVehicleFound} />
+      </div>
+      <div
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12"
+        ref={waitingForDriverRef}
+      >
+        <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
+      </div>
     </div>
   );
 };

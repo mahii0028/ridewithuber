@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
 const propTypes = {
-  setOpenVehiclePanel: PropTypes.bool.isRequired,
-  setOpenPanel: PropTypes.bool.isRequired,
+  setOpenVehiclePanel: PropTypes.func.isRequired,
+  setOpenPanel: PropTypes.func.isRequired,
 };
 
 const LocationsSearchPanel = (props) => {

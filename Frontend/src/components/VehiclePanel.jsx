@@ -2,8 +2,8 @@ import { Fragment } from "react";
 import PropTypes from "prop-types";
 
 const propTypes = {
-  setConfirmRide: PropTypes.bool.isRequired,
-  setOpenVehiclePanel: PropTypes.bool.isRequired,
+  setConfirmRide: PropTypes.func.isRequired,
+  setOpenVehiclePanel: PropTypes.func.isRequired,
 };
 
 const VehiclePanel = ({ setConfirmRide, setOpenVehiclePanel }) => {
